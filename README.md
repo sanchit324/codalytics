@@ -2,9 +2,8 @@
 
 This project aims to write a Codeforces Chrome extension which can be used for various analytics tasks.
 
-![Problems Solved](public/problemsSolvedCF.png)
-
-![Tags Solved](public/tagsSolvedCF.png)
+![Problems Solved](frontend/public/problemsSolvedCF.png)
+![Tags Solved](frontend/public/tagsSolvedCF.png)
 
 ## Tech Stack Used
 
