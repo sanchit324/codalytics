@@ -1,0 +1,131 @@
+/* App.css */
+body {
+  background-color: smokewhite;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+.rating-box, .problem-level-box, .problem-tag-box, .unsolved-questions-box {
+  width: 80%;
+  max-width: 500px;
+  margin: 20px;
+  text-align: center;
+}
+
+.rating-box {
+  border: 2px solid #4A90E2;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.problem-level-box {
+  border: 2px solid #50E3C2;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.problem-tag-box {
+  border: 2px solid #9013FE;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.unsolved-questions-box {
+  border: 2px solid #9013FE;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: left;
+  text-overflow: auto;
+}
+
+.unsolved-questions-box h2{
+  text-align: center;
+}
+
+.unsolved-questions-list {
+  white-space: pre-wrap; 
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  display: inline;
+  text-align: left;
+}
+
+.unsolved-questions-list a {
+  text-decoration: none;
+  cursor: pointer
+}
+
+.unsolved-questions-list a:visited {
+  color: blue;
+}
+
+.unsolved-questions-list a:hover {
+  color: purple;
+}
+
+.heading {
+  text-align: center;
+}
+
+.heading span{
+  color: #007BFF;
+}
+
+.input-container {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.username-input {
+  width: 250px;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-right: 10px;
+  text-align: center;
+}
+
+.username-input:focus {
+  border-color: #007BFF;
+  outline: none;
+  background-color: aliceblue;
+}
+
+.submit-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007BFF;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color color 0.3s ease;
+}
+
+.submit-button:hover,
+.submit-button.active {
+  background-color: #50E3C2;
+  color: #000;
+}
+
+input[type="text"] {
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 250px;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: #007BFF;
+}
