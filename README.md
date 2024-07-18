@@ -11,5 +11,7 @@ This project aims to write a Codeforces Chrome extension which can be used for v
 - [React](https://react.dev/)
 - [Chart.js](https://www.chartjs.org/)
 - [Codeforces APIs](https://codeforces.com/apiHelp)
+- [Express.js](https://expressjs.com/)
+- [Axios](https://axios-http.com/)
 
 ### Follow [Sanchit Singla | Github](https://github.com/sanchit324)
