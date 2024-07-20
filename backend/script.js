@@ -1,10 +1,99 @@
+const express = require('express');
+const { ApolloServer } = require('@apollo/server');
+const { expressMiddleware } = require('@apollo/server/express4');
+const { makeExecutableSchema } = require('@graphql-tools/schema');
 const cors = require('cors');
-const express = require('express')
+const bodyParser = require('body-parser');
 
-const app = express()
-const PORT = 3000
-
+const app = express();
+const PORT = 3000;
 app.use(cors());
+
+const typeDefs = `
+  type Contest {
+    contestName: String!
+    rank: Int!
+    oldRating: Int!
+    newRating: Int!
+  }
+
+  type Problem {
+    contestId: Int!
+    index: String!
+    points: Float
+    rating: Int
+    tags: [String!]!
+  }
+
+  type Submission {
+    problem: Problem!
+    verdict: String!
+  }
+
+  type UserRatingResponse {
+    result: [Contest!]!
+  }
+
+  type UserStatusResponse {
+    result: [Submission!]!
+  }
+
+  type ProcessedRatingData {
+    combinedLabels: [String!]!
+    ratings: [Int!]!
+  }
+
+  type ProcessedStatusData {
+    countMap: JSON!
+    sortedEntries: [[String!]!]!
+    tagKeysSorted: [String!]!
+    tagValues: [Int!]!
+    tagKeys: [String!]!
+    labels: [String!]!
+    counts: [Int!]!
+    unsolvedQuestionId: [String!]!
+    unsolvedContestQuestion: [String!]!
+    unsolvedContestId: [Int!]!
+  }
+
+  type Query {
+    userRating(handle: String!): UserRatingResponse
+    userStatus(handle: String!): UserStatusResponse
+    processedUserRating(handle: String!): ProcessedRatingData
+    processedUserStatus(handle: String!): ProcessedStatusData
+  }
+
+  scalar JSON
+`;
+
+const resolvers = {
+  Query: {
+    userRating: async (_, { handle }) => {
+      const profileURL = `https://codeforces.com/api/user.rating?handle=${handle}`;
+      return await fetchData(profileURL);
+    },
+    userStatus: async (_, { handle }) => {
+      const statusURL = `https://codeforces.com/api/user.status?handle=${handle}`;
+      return await fetchData(statusURL);
+    },
+    processedUserRating: async (_, { handle }) => {
+      return await processData(handle);
+    },
+    processedUserStatus: async (_, { handle }) => {
+      // const startTime = process.hrtime();
+      const result = await userStatus(handle);
+      // const endTime = process.hrtime(startTime);
+      // const executionTime = endTime[0] * 1000 + endTime[1] / 1000000; // Convert to milliseconds
+      
+      // console.log(`GraphQL execution time: ${executionTime.toFixed(2)} ms`);
+      return result;
+    },
+  },
+};
+
+const schema = makeExecutableSchema({ typeDefs, resolvers });
+
+const server = new ApolloServer({ schema });
 
 /****************************/
 const fetchData = async (URL) => {
@@ -126,7 +215,19 @@ const userStatus = async (user) => {
 };
 
 
-app.get('/user/rating/:handle', async (req, res) => {
+async function startServer() {
+  await server.start();
+
+  // Apply the Apollo GraphQL middleware and set the path to /graphql
+  app.use(
+    '/graphql',
+    cors(),
+    bodyParser.json(),
+    expressMiddleware(server),
+  );
+
+  // Keep your existing REST endpoints
+  app.get('/user/rating/:handle', async (req, res) => {
     const userHandle = req.params.handle;
     try {
       const data = await processData(userHandle);
@@ -134,18 +235,31 @@ app.get('/user/rating/:handle', async (req, res) => {
     } catch (error) {
       res.status(500).send('Error fetching user rating data');
     }
-});
-  
-app.get('/user/status/:handle', async (req, res) => {
-const userHandle = req.params.handle;
-try {
-    const data = await userStatus(userHandle);
-    res.json(data);
-} catch (error) {
-    res.status(500).send('Error fetching user status data');
-}
-});
+  });
+    
+  app.get('/user/status/:handle', async (req, res) => {
+    const userHandle = req.params.handle;
+    // const startTime = process.hrtime();
+    try {
+      const data = await userStatus(userHandle);
+      // const endTime = process.hrtime(startTime);
+      // const executionTime = endTime[0] * 1000 + endTime[1] / 1000000; // Convert to milliseconds
 
-app.listen(PORT, () => {
-console.log(`Server is running on port ${PORT}`);
-});
+      // const payloadSize = Buffer.byteLength(JSON.stringify(data), 'utf8');
+    
+      // console.log(`REST API execution time: ${executionTime.toFixed(2)} ms`);
+      // console.log(`REST API payload size: ${payloadSize} bytes`);
+      res.json(data);
+    } catch (error) {
+      res.status(500).send('Error fetching user status data');
+    }
+  });
+
+  // Start the server
+  app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`GraphQL endpoint: http://localhost:${PORT}/graphql`);
+  });
+}
+
+startServer();
