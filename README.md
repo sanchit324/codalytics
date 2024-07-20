@@ -13,5 +13,6 @@ This project aims to write a Codeforces Chrome extension which can be used for v
 - [Codeforces APIs](https://codeforces.com/apiHelp)
 - [Express.js](https://expressjs.com/)
 - [Axios](https://axios-http.com/)
+- [Apollo GraphQL](https://www.apollographql.com/docs/)
 
 ### Follow [Sanchit Singla | Github](https://github.com/sanchit324)

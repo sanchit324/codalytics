@@ -6,6 +6,34 @@ import { DoughnutChart } from "./components/DoughnutChart";
 import chroma from "chroma-js";
 import './App.css'; 
 import axios from 'axios'
+import { useQuery, gql } from '@apollo/client';
+
+
+const USER_RATING_QUERY = gql`
+  query UserRating($handle: String!) {
+    processedUserRating(handle: $handle) {
+      combinedLabels
+      ratings
+    }
+  }
+`;
+
+const USER_STATUS_QUERY = gql`
+  query UserStatus($handle: String!) {
+    processedUserStatus(handle: $handle) {
+      countMap
+      counts
+      labels
+      sortedEntries
+      tagKeys
+      tagKeysSorted
+      tagValues
+      unsolvedContestId
+      unsolvedContestQuestion
+      unsolvedQuestionId
+    }
+  }
+`;
 
 function App() {
   const [chartData, setChartData] = useState({
@@ -20,7 +48,7 @@ function App() {
       },
       {
         label: "Ratings",
-        data: [], // Initialize empty data array
+        data: [],
         backgroundColor: [],
         borderColor: "black",
         borderWidth: 0.5
@@ -214,5 +242,4 @@ function App() {
     </div>
   );
 }
-
 export default App;
